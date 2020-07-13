@@ -16,12 +16,13 @@ enum AttachmentType: String {
     case jpeg = "public.jpeg"
     case png = "public.png"
     case text = "public.plain-text"
+    case log = "com.apple.log"
 
     var cssClass: String {
         switch self {
         case .png, .jpeg:
             return "screenshot"
-        case .text:
+        case .text, .log:
             return "text"
         default:
             return ""
@@ -34,7 +35,7 @@ enum AttachmentType: String {
             return "image/png"
         case .jpeg:
             return "image/jpeg"
-        case .text:
+        case .text, .log:
             return "text/plain"
         case .html:
             return "text/html"
@@ -100,7 +101,7 @@ struct Attachment: HTML
         switch type {
         case .png, .jpeg:
             return "Screenshot"
-        case .text, .html, .data:
+        case .text, .html, .data, .log:
             return "File"
         case .unknown:
             return "Attachment"
@@ -136,7 +137,7 @@ struct Attachment: HTML
         switch type {
         case .png, .jpeg:
             return HTMLTemplates.screenshot
-        case .text, .html, .data:
+        case .text, .html, .data, .log:
             return HTMLTemplates.text
         case .unknown:
             return ""
