@@ -60,6 +60,7 @@ struct Test: HTML
     let status: Status
     let objectClass: ObjectClass
     let testScreenshotFlow: TestScreenshotFlow?
+    let testAttachmentList: TestAttachmentList?
 
     var allSubTests: [Test] {
         return subTests.flatMap { test -> [Test] in
@@ -88,6 +89,7 @@ struct Test: HTML
         self.activities = []
         self.status = .unknown // ???: Usefull?
         testScreenshotFlow = TestScreenshotFlow(activities: activities)
+        testAttachmentList = TestAttachmentList(activities: activities, padding: 20)
     }
 
     init(metadata: ActionTestMetadata, file: ResultFile, renderingMode: Summary.RenderingMode) {
@@ -107,6 +109,7 @@ struct Test: HTML
             self.activities = []
         }
         testScreenshotFlow = TestScreenshotFlow(activities: activities)
+        testAttachmentList = TestAttachmentList(activities: activities, padding: 38)
     }
 
     // PRAGMA MARK: - HTML
@@ -126,7 +129,9 @@ struct Test: HTML
             "ICON_CLASS": status.cssClass,
             "ITEM_CLASS": objectClass.cssClass,
 			"LIST_ITEM_CLASS": objectClass == .testSummary ? (status == .failure ? "list-item list-item-failed" : "list-item") : "",
+            "PADDING": "20",
             "SCREENSHOT_FLOW": testScreenshotFlow?.screenshots.accumulateHTMLAsString ?? "",
+            "ATTACHMENT_LIST": testAttachmentList?.attachments.accumulateHTMLAsString ?? "",
             "SCREENSHOT_TAIL": testScreenshotFlow?.screenshotsTail.accumulateHTMLAsString ?? ""
         ]
     }

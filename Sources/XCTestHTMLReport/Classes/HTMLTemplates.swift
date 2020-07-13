@@ -399,6 +399,14 @@ struct HTMLTemplates
       z-index: 1000;
     }
 
+    .attachment-item {
+        padding: 8px;
+        background-color: #F2F2F2;
+        height: 300px;
+        overflow: scroll;
+        display: none;
+    }
+
     .screenshot-flow {
         border: 1px solid #021a40;
         background-color: white;
@@ -780,6 +788,33 @@ struct HTMLTemplates
       }
     }
 
+    function toggleScreenshots(el) {
+      el.classList.toggle('dropped');
+      var screenshots = document.getElementById('screenshot-flow');
+
+      if (screenshots) {
+        screenshots.style.display = (screenshots.style.display == 'block' ? 'none' : 'block');
+      }
+    }
+
+    function toggleAttachments(el) {
+      el.classList.toggle('dropped');
+      var attachments = document.getElementById('attachment-list');
+
+      if (attachments) {
+        attachments.style.display = (attachments.style.display == 'block' ? 'none' : 'block');
+      }
+    }
+
+    function toggleAttachment(el, filename) {
+      el.classList.toggle('dropped');
+      var attachments = document.getElementById('attachment-' + filename);
+
+      if (attachments) {
+        attachments.style.display = (attachments.style.display == 'block' ? 'none' : 'block');
+      }
+    }
+
     function showAttachmentPlaceholder() {
       var placeholder = document.querySelector(\"#right-sidebar h2\");
       placeholder.style.display = \"block\";
@@ -946,7 +981,6 @@ struct HTMLTemplates
   """
 
   static let test = """
-  [[SCREENSHOT_TAIL]]
   <div class=\"[[ITEM_CLASS]] [[ICON_CLASS]] [[HAS_ACTIVITIES_CLASS]]\">
     <span class=\"icon left test-result-icon\"></span>
     <p class=\"[[LIST_ITEM_CLASS]]\">
@@ -956,7 +990,22 @@ struct HTMLTemplates
     </p>
     [[SUB_TESTS]]
     <div id=\"activities-[[UUID]]\" class=\"activities\">
+    <p class=\"list-item\">
+      <span style=\"margin-left: [[PADDING]]px\" class=\"padding\"></span>
+      <span class=\"icon left drop-down-icon\" onclick=\"toggleScreenshots(this)\"></span>
+      Screenshots
+    </p>
+    <div id=\"screenshot-flow\" style=\"display: none;\">
     [[SCREENSHOT_FLOW]]
+    </div>
+    <p class=\"list-item\">
+      <span style=\"margin-left: [[PADDING]]px\" class=\"padding\"></span>
+      <span class=\"icon left drop-down-icon\" onclick=\"toggleAttachments(this)\"></span>
+      Attachments
+    </p>
+    <div id=\"attachment-list\" style=\"display: none;\">
+    [[ATTACHMENT_LIST]]
+    </div>
     [[ACTIVITIES]]
     </div>
   </div>
