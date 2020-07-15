@@ -61,6 +61,7 @@ struct Test: HTML
     let objectClass: ObjectClass
     let testScreenshotFlow: TestScreenshotFlow?
     let testAttachmentList: TestAttachmentList?
+    let testVideo: TestVideo?
 
     var allSubTests: [Test] {
         return subTests.flatMap { test -> [Test] in
@@ -75,24 +76,25 @@ struct Test: HTML
         return a == 0 ? subTests.count : a
     }
 
-    init(group: ActionTestSummaryGroup, file: ResultFile, renderingMode: Summary.RenderingMode) {
+    init(group: ActionTestSummaryGroup, file: ResultFile, renderingMode: Summary.RenderingMode, videosDirectory: String?) {
         self.uuid = NSUUID().uuidString
         self.identifier = group.identifier
         self.duration = group.duration
         self.name = group.name
         if group.subtests.isEmpty {
-            self.subTests = group.subtestGroups.map { Test(group: $0, file: file, renderingMode: renderingMode) }
+            self.subTests = group.subtestGroups.map { Test(group: $0, file: file, renderingMode: renderingMode, videosDirectory: videosDirectory) }
         } else {
-            self.subTests = group.subtests.map { Test(metadata: $0, file: file, renderingMode: renderingMode) }
+            self.subTests = group.subtests.map { Test(metadata: $0, file: file, renderingMode: renderingMode, videosDirectory: videosDirectory) }
         }
         self.objectClass = .testSummaryGroup
         self.activities = []
         self.status = .unknown // ???: Usefull?
         testScreenshotFlow = TestScreenshotFlow(activities: activities)
         testAttachmentList = TestAttachmentList(activities: activities, padding: 20)
+        testVideo = TestVideo(identifier: group.identifier, in: videosDirectory, padding: 20)
     }
 
-    init(metadata: ActionTestMetadata, file: ResultFile, renderingMode: Summary.RenderingMode) {
+    init(metadata: ActionTestMetadata, file: ResultFile, renderingMode: Summary.RenderingMode, videosDirectory: String?) {
         self.uuid = NSUUID().uuidString
         self.identifier = metadata.identifier
         self.duration = metadata.duration ?? 0
@@ -110,6 +112,7 @@ struct Test: HTML
         }
         testScreenshotFlow = TestScreenshotFlow(activities: activities)
         testAttachmentList = TestAttachmentList(activities: activities, padding: 38)
+        testVideo = TestVideo(identifier: metadata.identifier, in: videosDirectory, padding: 20)
     }
 
     // PRAGMA MARK: - HTML
@@ -132,6 +135,7 @@ struct Test: HTML
             "PADDING": "20",
             "SCREENSHOT_FLOW": testScreenshotFlow?.screenshots.accumulateHTMLAsString ?? "",
             "ATTACHMENT_LIST": testAttachmentList?.attachments.accumulateHTMLAsString ?? "",
+            "VIDEO": testVideo?.html ?? "",
             "SCREENSHOT_TAIL": testScreenshotFlow?.screenshotsTail.accumulateHTMLAsString ?? ""
         ]
     }

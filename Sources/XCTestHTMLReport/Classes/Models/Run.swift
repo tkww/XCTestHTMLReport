@@ -46,7 +46,7 @@ struct Run: HTML
         return allTests.filter { $0.status == .failure }.count
     }
 
-    init?(action: ActionRecord, file: ResultFile, renderingMode: Summary.RenderingMode) {
+    init?(action: ActionRecord, file: ResultFile, renderingMode: Summary.RenderingMode, videosDirectory: String?) {
         self.file = file
         self.runDestination = RunDestination(record: action.runDestination)
 
@@ -70,7 +70,7 @@ struct Run: HTML
         }
         self.testSummaries = testPlanSummaries.summaries
             .flatMap { $0.testableSummaries }
-            .map { TestSummary(summary: $0, file: file, renderingMode: renderingMode) }
+            .map { TestSummary(summary: $0, file: file, renderingMode: renderingMode, videosDirectory: videosDirectory) }
     }
 
     private var logSource: String? {

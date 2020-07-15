@@ -17,6 +17,7 @@ var junit = BlockArgument("j", "junit", required: false, helpMessage: "Provide J
     junitEnabled = true
 }
 var result = ValueArgument(.path, "r", "resultBundlePath", required: true, allowsMultiple: true, helpMessage: "Path to a result bundle (allows multiple)")
+var videosDirectory = ValueArgument(.path, "m", "videosDirectory", required: false, allowsMultiple: false, helpMessage: "Path to a directory of test run videos")
 var renderingMode = Summary.RenderingMode.linking
 var inlineAssets = BlockArgument("i", "inlineAssets", required: false, helpMessage: "Inline all assets in the resulting html-file, making it heavier, but more portable") {
     renderingMode = .inline
@@ -37,6 +38,7 @@ command.arguments = [help,
                      downsizeImages,
                      deleteUnattachedFiles,
                      result,
+                     videosDirectory,
                      inlineAssets]
 
 if !command.isValid {
@@ -44,7 +46,7 @@ if !command.isValid {
     exit(EXIT_FAILURE)
 }
 
-let summary = Summary(resultPaths: result.values, renderingMode: renderingMode)
+let summary = Summary(resultPaths: result.values, renderingMode: renderingMode, videosDirectory: videosDirectory.values.first)
 
 Logger.step("Building HTML..")
 let html = summary.html

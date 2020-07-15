@@ -399,6 +399,20 @@ struct HTMLTemplates
       z-index: 1000;
     }
 
+    .video {
+      background-color: white;
+      padding: 4px;
+      height: 600px;
+      position: absolute;
+      top:0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      display:none;
+      z-index: 1000;
+    }
+
     .attachment-item {
         padding: 8px;
         background-color: #F2F2F2;
@@ -520,6 +534,11 @@ struct HTMLTemplates
       width: 100%;
     }
 
+    .displayed-video {
+      width: 100%;
+      display: none;
+    }
+
     .attachments {
       display: none;
     }
@@ -583,6 +602,7 @@ struct HTMLTemplates
           <h2>No Selected Attachment</h2>
           <img src=\"\" class=\"displayed-screenshot\" id=\"screenshot\"/>
           <iframe id=\"text-attachment\" src=\"\"></iframe>
+          <video class=\"displayed-video\" controls src=\"\" id=\"video\"/>
         </div>
         <div class=\"clear\"></div>
       </div>
@@ -594,6 +614,7 @@ struct HTMLTemplates
     rightSidebar = document.getElementById('right-sidebar'),
     sidebar, startX, startWidth, originalWidth,
     screenshot = document.getElementById('screenshot'),
+    video = document.getElementById('video'),
     iframe = document.getElementById('text-attachment');
 
     for (var i = 0; i < resizers.length; i++) {
@@ -634,15 +655,18 @@ struct HTMLTemplates
       if (firstAttachment == null) {
         hideScreenshot();
         hideLog();
+        hideVideo();
         showAttachmentPlaceholder();
         return;
       }
 
       var path = firstAttachment.attributes[\"data\"].value;
       var extension = path.split('.').pop();
-      var textExtension = [\"txt\", \"crash\", \"html\"];
-      if (textExtension.indexOf(extension) != -1) {
+      var textExtension = [\"txt\", \"crash\", \"html\", \"log\"];
+      if (textExtension.indexOf(extension) != -1 || extension.startsWith(\"data:text/plain\")) {
         showText(path);
+      } else if (extension == \"mp4\") {
+        showVideo(path);
       } else {
         showScreenshot(path);
       }
@@ -797,6 +821,15 @@ struct HTMLTemplates
       }
     }
 
+    function toggleVideo(el, id) {
+      el.classList.toggle('dropped');
+      var video = document.getElementById('test-video-'+id);
+
+      if (video) {
+        video.style.display = (video.style.display == 'block' ? 'none' : 'block');
+      }
+    }
+
     function toggleAttachments(el, id) {
       el.classList.toggle('dropped');
       var attachments = document.getElementById('attachment-list-'+id);
@@ -832,6 +865,7 @@ struct HTMLTemplates
     function showText(path) {
       hideAttachmentPlaceholder();
       hideScreenshot();
+      hideVideo();
       iframe.style.display = \"block\";
       iframe.src = path;
     }
@@ -840,12 +874,27 @@ struct HTMLTemplates
       screenshot.style.display = \"none\";
     }
 
+    function hideVideo() {
+      video.style.display = \"none\";
+    }
+
     function showScreenshot(filename) {
       hideAttachmentPlaceholder();
       hideLog();
+      hideVideo();
       var image = document.getElementById('screenshot-'+filename);
       screenshot.style.display = \"block\";
       screenshot.src = image.src;
+    }
+
+    function showVideo(filename) {
+      hideAttachmentPlaceholder();
+      hideLog();
+      hideScreenshot();
+      var vid = document.getElementById('video-'+filename);
+      video.style.display = \"block\";
+      video.src = vid.src;
+      video.play();
     }
 
     function setDisplayToElementsWithSelector(sel, display) {
@@ -990,6 +1039,7 @@ struct HTMLTemplates
     </p>
     [[SUB_TESTS]]
     <div id=\"activities-[[UUID]]\" class=\"activities\">
+    [[VIDEO]]
     <p class=\"list-item\">
       <span style=\"margin-left: [[PADDING]]px\" class=\"padding\"></span>
       <span class=\"icon left drop-down-icon\" onclick=\"toggleScreenshots(this, '[[UUID]]')\"></span>

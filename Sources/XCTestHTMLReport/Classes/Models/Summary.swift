@@ -18,7 +18,7 @@ struct Summary
         case linking
     }
 
-    init(resultPaths: [String], renderingMode: RenderingMode) {
+    init(resultPaths: [String], renderingMode: RenderingMode, videosDirectory: String?) {
         var runs: [Run] = []
         for resultPath in resultPaths {
             Logger.step("Parsing \(resultPath)")
@@ -29,7 +29,7 @@ struct Summary
                 break
             }
             let resultRuns = invocationRecord.actions.compactMap {
-                Run(action: $0, file: resultFile, renderingMode: renderingMode)
+                Run(action: $0, file: resultFile, renderingMode: renderingMode, videosDirectory: videosDirectory)
             }
             runs.append(contentsOf: resultRuns)
         }
