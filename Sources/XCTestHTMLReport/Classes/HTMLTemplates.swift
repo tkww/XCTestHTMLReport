@@ -788,18 +788,18 @@ struct HTMLTemplates
       }
     }
 
-    function toggleScreenshots(el) {
+    function toggleScreenshots(el, id) {
       el.classList.toggle('dropped');
-      var screenshots = document.getElementById('screenshot-flow');
+      var screenshots = document.getElementById('screenshot-flow-'+id);
 
       if (screenshots) {
         screenshots.style.display = (screenshots.style.display == 'block' ? 'none' : 'block');
       }
     }
 
-    function toggleAttachments(el) {
+    function toggleAttachments(el, id) {
       el.classList.toggle('dropped');
-      var attachments = document.getElementById('attachment-list');
+      var attachments = document.getElementById('attachment-list-'+id);
 
       if (attachments) {
         attachments.style.display = (attachments.style.display == 'block' ? 'none' : 'block');
@@ -992,20 +992,20 @@ struct HTMLTemplates
     <div id=\"activities-[[UUID]]\" class=\"activities\">
     <p class=\"list-item\">
       <span style=\"margin-left: [[PADDING]]px\" class=\"padding\"></span>
-      <span class=\"icon left drop-down-icon\" onclick=\"toggleScreenshots(this)\"></span>
+      <span class=\"icon left drop-down-icon\" onclick=\"toggleScreenshots(this, '[[UUID]]')\"></span>
       Screenshots
     </p>
-    <div id=\"screenshot-flow\" style=\"display: none;\">
+    <div id=\"screenshot-flow-[[UUID]]\" style=\"display: none;\">
     [[SCREENSHOT_FLOW]]
     </div>
-    <p class=\"list-item\">
+    <!--<p class=\"list-item\">
       <span style=\"margin-left: [[PADDING]]px\" class=\"padding\"></span>
-      <span class=\"icon left drop-down-icon\" onclick=\"toggleAttachments(this)\"></span>
+      <span class=\"icon left drop-down-icon\" onclick=\"toggleAttachments(this, '[[UUID]]')\"></span>
       Attachments
     </p>
-    <div id=\"attachment-list\" style=\"display: none;\">
+    <div id=\"attachment-list-[[UUID]]\" style=\"display: none;\">
     [[ATTACHMENT_LIST]]
-    </div>
+    </div>-->
     [[ACTIVITIES]]
     </div>
   </div>
