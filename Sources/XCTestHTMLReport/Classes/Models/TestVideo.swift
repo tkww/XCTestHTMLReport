@@ -14,14 +14,18 @@ struct TestVideo: HTML {
 
         let name = identifier[..<identifier.index(identifier.endIndex, offsetBy: -2)]
             .replacingOccurrences(of: "/", with: "-")
-        let path = URL(fileURLWithPath: directory)
+        let fullPath = URL(fileURLWithPath: directory)
             .appendingPathComponent(name)
             .appendingPathExtension("mp4")
             .path
 
-        guard FileManager.default.fileExists(atPath: path) else { return nil }
+        guard FileManager.default.fileExists(atPath: fullPath) else { return nil }
 
-        videoPath = path
+        videoPath = URL(fileURLWithPath: URL(fileURLWithPath: directory)
+            .lastPathComponent)
+            .appendingPathComponent(name)
+            .appendingPathExtension("mp4")
+            .path
         self.padding = padding
     }
 
