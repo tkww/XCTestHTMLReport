@@ -1,8 +1,8 @@
 class Xchtmlreport < Formula
   desc "XCTestHTMLReport: Xcode-like HTML report for Unit and UI Tests"
   homepage "https://github.com/tkww/XCTestHTMLReport"
-  url "https://github.com/tkww/XCTestHTMLReport/archive/2.2.0.zip"
-  sha256 "1c19462a038c276416b3df8276b65c5948b1108f353bea6215a1129d3a7b4272"
+  url "https://github.com/tkww/XCTestHTMLReport/archive/2.2.1.zip"
+  sha256 "2619000d4f879ab8c771a84acc539f0c516ae48dee9f067a0525a9b843de8357"
   head "https://github.com/tkww/XCTestHTMLReport.git", :branch => "master"
 
   def install
