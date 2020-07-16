@@ -21,11 +21,9 @@ struct TestVideo: HTML {
 
         guard FileManager.default.fileExists(atPath: fullPath) else { return nil }
 
-        videoPath = URL(fileURLWithPath: URL(fileURLWithPath: directory)
-            .lastPathComponent)
-            .appendingPathComponent(name)
-            .appendingPathExtension("mp4")
-            .path
+        videoPath = URL(fileURLWithPath: directory)
+            .lastPathComponent
+            .appending("/\(name).mp4")
         self.padding = padding
     }
 
