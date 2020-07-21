@@ -30,7 +30,7 @@ release: package
 	@github-release release \
 		--security-token $(GITHUB_TOKEN) \
     --user tkww \
-    --repo TKCore-iOS \
+    --repo $(PACKAGE_NAME) \
     --tag $(VERSION) \
     --name "$(PACKAGE_NAME) Release $(VERSION)" && \
   github-release upload \
@@ -38,7 +38,7 @@ release: package
     --user tkww \
     --repo $(PACKAGE_NAME) \
     --tag $(VERSION) \
-    --name "$(PACKAGE_NAME)-$(VERSION).zip" \
+    --name "$(PACKAGE_NAME).zip" \
     --file $(PACKAGE_PATH)	
 
 xcodeproj:
