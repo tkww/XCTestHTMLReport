@@ -30,6 +30,8 @@ jobs:
         git checkout -b formula/xchtmlreport/$VERSION
         brew install --build-bottle ./xchtmlreport.rb
         brew bottle --json --root-url=https://github.com/tkww/XCTestHTMLReport/releases/download/$VERSION ./xchtmlreport.rb
+        FILE=$(ls -d *.bottle.tar.gz | head -1)
+        mv "$FILE" "$(echo "$FILE" | sed s/--/-/)"
         BOTTLE=$(ls -d $PWD/*.bottle.tar.gz | head -1)
         BOTTLE_JSON=$(ls -d $PWD/*.bottle.json | head -1)
         brew bottle --merge $BOTTLE_JSON --write --no-commit
