@@ -1,0 +1,60 @@
+name: Update Formula
+
+on:
+  push:
+   tags:
+     - '*'
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update Formula
+      id: update_formula
+      run: |
+        VERSION=${GITHUB_REF/refs\/tags\//}
+        URL="https://github.com/tkww/XCTestHTMLReport/archive/$VERSION.tar.gz"
+        sed -E -i '' 's~^  url ".+"~  url "'$URL\"~ ./xchtmlreport.rb
+        brew fetch ./xchtmlreport.rb || true
+        SHA256=$(shasum --algorithm 256 $(brew --cache --build-from-source ./xchtmlreport.rb) | awk '{print $1}')
+        sed -E -i '' 's/^  sha256 ".+"/  sha256 "'$SHA256\"/ ./xchtmlreport.rb
+        brew install --build-bottle ./xchtmlreport.rb
+        BOTTLE=$(ls *.bottle.tar.gz | head -1)
+        BOTTLE_JSON=$(ls *.bottle.json | head -1)
+        echo ::set-output name=bottle::$BOTTLE
+        echo ::set-output name=bottle_json::$BOTTLE_JSON
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ${{ steps.update_formula.outputs.bottle }} 
+        asset_name: ${{ steps.update_formula.outputs.bottle }} 
+        asset_content_type: application/gzip
+    - name: Add Bottle to Formula
+      id: add_bottle_to_formula
+      run: |
+        brew bottle --json --root-url=${{ steps.upload-release-asset.outputs.browser_download_url }} ./xchtmlreport.rb
+        brew bottle --merge ${{ steps.update_formula.outputs.bottle_json }} --write --no-commit
+    - name: Bump tkww/homebrew-tap formula
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew tap tkww/tap
+        brew bump-formula-pr --version=${GITHUB_REF/refs\/tags\//} --no-browse tkww/tap/xchtmlreport
