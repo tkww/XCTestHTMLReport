@@ -5,3 +5,6 @@ TestResults*
 /*.xcodeproj
 xcuserdata/
 .swiftpm
+.env
+/build
+/package
