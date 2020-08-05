@@ -15,6 +15,7 @@ enum AttachmentType: String {
     case html = "public.html"
     case jpeg = "public.jpeg"
     case png = "public.png"
+    case mp4 = "public.mpeg-4"
     case text = "public.plain-text"
     case log = "com.apple.log"
 
@@ -22,6 +23,8 @@ enum AttachmentType: String {
         switch self {
         case .png, .jpeg:
             return "screenshot"
+        case .mp4:
+            return "video"
         case .text, .log:
             return "text"
         default:
@@ -37,6 +40,8 @@ enum AttachmentType: String {
             return "image/jpeg"
         case .text, .log:
             return "text/plain"
+        case .mp4:
+            return "video/mp4"
         case .html:
             return "text/html"
         case .data:
@@ -101,6 +106,8 @@ struct Attachment: HTML
         switch type {
         case .png, .jpeg:
             return "Screenshot"
+        case .mp4:
+            return "Video"
         case .text, .html, .data, .log:
             return "File"
         case .unknown:
@@ -146,6 +153,8 @@ struct Attachment: HTML
         switch type {
         case .png, .jpeg:
             return HTMLTemplates.screenshot
+        case .mp4:
+            return HTMLTemplates.video
         case .text, .html, .data, .log:
             return HTMLTemplates.text
         case .unknown:
