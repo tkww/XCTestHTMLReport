@@ -25,6 +25,8 @@ struct TestGroupCollection: HTML {
         self.identifier = name
         self.duration = testGroups.reduce(0) { $0 + $1.duration }
         self.name = name
+        // Fixes the duplicate tests showing up in the Joined runs summary.
+        // For further context please check the following task: https://theknotww.atlassian.net/browse/PM-68
         self.testGroups = testGroups.filter { $0.name != name }
     }
 
