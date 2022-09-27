@@ -14,9 +14,12 @@ import XCResultKit
 struct JoinedRuns : HTML
 {
     let testGroupCollections: [TestGroupCollection]
-
+    
+    /// Returns the total number of tests inside every considered testGroup.
+    /// Fixes the problem with the "All" counter in the Joined runs summary
+    ///  For further context please check:  [PM-68](https://theknotww.atlassian.net/browse/PM-68)
     var numberOfTests : Int {
-        return allTestGroups.count
+        return testGroupCollections.reduce(0) { $0 + $1.testGroups.count }
     }
 
     var numberOfPassedTests : Int {

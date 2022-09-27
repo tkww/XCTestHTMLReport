@@ -71,6 +71,16 @@ $ xchtmlreport -r TestResults
 Report successfully created at ./index.html
 ```
 
+## Testing changes: 
+
+To test any changes made to the SDK locally:
+- Open the SDK folder with Xcode.
+- Click in the project target and select `Edit Scheme`.
+- In the `Run` category open the `Arguments` section.
+- In the `Arguments passed on Launch` list add a new argument with a valid path to an `.xcresult` file.
+- Make sure that the new argument is checked. 
+- Close the window and run.
+
 ### Multiple Result Bundle Path
 
 You can also pass multiple times the -r option.
