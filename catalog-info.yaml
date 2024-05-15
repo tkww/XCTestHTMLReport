@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: XCTestHTMLReport
+  annotations:
+    github.com/project-slug: tkww/XCTestHTMLReport
+  tags:
+    - ios
+spec:
+  type: utility
+  lifecycle: production
+  owner: platform-mobile-admin
